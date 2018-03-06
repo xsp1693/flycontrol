@@ -8,9 +8,6 @@
  */
 package css.com.xsp.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @createTime 2018年2月9日 上午10:34:41
  * @modifyTime 
@@ -18,38 +15,31 @@ import java.util.Map;
  * @version 1.0
  */
 public class Sudoku {
-	private static Map<String, String> hint=new HashMap<String, String>();//记录候选数，key为坐标，value为候选数
-	private static char[][] cells=new char[9][9];
+//	private  Map<String, String> hint=new HashMap<String, String>();//记录候选数，key为坐标，value为候选数
+	private  int[][] cells=new int[9][9];
 	public static void main(String[] args) {
 //		String q="810003290,067000000,900500006,000408000,604000809,000209000,700001008,000000370,053800042";//28
 //		String q="050000020,400206007,008030100,010000060,009000500,070000090,005080300,700901004,020000070";//24
 //		String q="500090201,002007008,080000300,014005000,000903000,000800940,003000060,600200100,809060005";//26
-		String q="000020040,000000900,000300070,003040000,600050093,970080006,010005200,060007050,800600000";//23个数
-		initCells(q);
-		print();
-		compute();
-		print();
+//		String q="000020040,000000900,000300070,003040000,600050093,970080006,010005200,060007050,800600000";//23个数
+		String q="600000400,008070620,350000080,000640800,000000000,004053000,080000096,041020500,002000001";//24
+		Sudoku t=new Sudoku();
+		long t1=System.currentTimeMillis();
+		t.initCells(q);
+		t.print();
+		t.compute();
+		long t2=System.currentTimeMillis();
+		t.print();
+		boolean b=t.checkResult();
+		System.out.println(b?"OK,共耗时"+(t2-t1)+"毫秒。":"有错或未完成");
 	}
 	
-	private static void compute(){
-		int n=0;
-		do{
-			n=0;
-			for(int i=0;i<9;i++){
-				for(int j=0;j<9;j++){
-					if(cells[i][j]=='0'){
-						boolean b=checkEmptyCell(i, j);
-						n+=(b?1:0);
-					}
-				}
-			}
-			System.out.println("====================================");
-		}while(n>0);
-		
+	private void compute(){
+		findAllHint();
 		boolean filled=false;
 		for(int i=0;i<9;i++){
 			for(int j=0;j<9;j++){
-				if(cells[i][j]=='0'){
+				if(cells[i][j]>10){
 					filled=checkHintInBox(i, j);
 					if(filled){
 						break;
@@ -62,20 +52,41 @@ public class Sudoku {
 		}
 		if(filled){
 			compute();
-		}else{
+		}/*else{
 			filled=checkTwoHintNum();
 			if(filled){
 				compute();
 			}
-		}
+		}*/
+		bruteForce();
+	}
+
+	/**
+	 * 查找所有的候选数
+	 * @create 2018年3月1日 下午12:38:12 ：xieshp@css.com.cn 
+	 * @modify
+	 */
+	private  void findAllHint() {
+		int n=0;
+		do{
+			n=0;
+			for(int i=0;i<9;i++){
+				for(int j=0;j<9;j++){
+					if(cells[i][j]==0){
+						boolean b=checkEmptyCell(i, j);
+						n+=(b?1:0);
+					}
+				}
+			}
+			System.out.println("====================================");
+		}while(n>0);
 	}
 	//初始化所有单元格
-	private static void initCells(String question) {
+	private void initCells(String question) {
 		String[] rows=question.split(",");
 		for(int i=0;i<9;i++){
-			char[] cols=rows[i].toCharArray();
 			for(int j=0;j<9;j++){
-				cells[i][j]=cols[j];
+				cells[i][j]=Integer.valueOf(rows[i].substring(j, j+1));
 			}
 		}
 	}
@@ -84,18 +95,21 @@ public class Sudoku {
 	 * @param row
 	 * @param col
 	 * @param num
+	 * @throws Exception 
 	 * @create 2018年2月28日 下午4:52:21 ：xieshp@css.com.cn 
 	 * @modify
 	 */
-	private static void fillCell(int row,int col,char num){
-		System.out.println("["+row+","+col+"]="+num);
+	private  void fillCell(int row,int col,int num){
 		cells[row][col]=num;
-		hint.remove(row+","+col);
+		if(num>10){
+			return;
+		}
+		System.out.println("["+row+","+col+"]="+num);
 		for(int i=0;i<9;i++){
-			if(cells[row][i]=='0'){
+			if(cells[row][i]>10){
 				removeHintChar(row, i, num);
 			}
-			if(cells[i][col]=='0'){
+			if(cells[i][col]>10){
 				removeHintChar(i, col, num);
 			}
 		}
@@ -103,7 +117,7 @@ public class Sudoku {
 		int bc=(col/3)*3;
 		for(int i=0;i<3;i++){
 			for(int j=0;j<3;j++){
-				if(cells[br+i][bc+j]=='0'){
+				if(cells[br+i][bc+j]>10){
 					removeHintChar(br+i, bc+j, num);
 				}
 			}
@@ -118,16 +132,15 @@ public class Sudoku {
 	 * @create 2018年2月28日 下午4:49:34 ：xieshp@css.com.cn 
 	 * @modify
 	 */
-	private static void removeHintChar(int row,int col,char num){
-		String pos=row+","+col;
-		String s=hint.get(pos);
+	private  void removeHintChar(int row,int col,int num){
+		String s=cells[row][col]+"";
 		int p=s.indexOf(""+num);
 		if(p>=0){
 			s=s.substring(0, p)+s.substring(p+1);
 			if(s.length()==1){
-				fillCell(row, col, s.charAt(0));
+				fillCell(row, col, Integer.valueOf(s));
 			}else{
-				hint.put(pos, s);
+				cells[row][col]=Integer.valueOf(s);
 			}
 		}
 	}
@@ -138,17 +151,17 @@ public class Sudoku {
 	 * @create 2018年2月9日 下午3:40:34 ：xieshp@css.com.cn 
 	 * @modify
 	 */
-	private static boolean checkEmptyCell(int row,int col){
+	private  boolean checkEmptyCell(int row,int col){
 		StringBuffer sbBuffer=new StringBuffer();
 		//记录第row行的所有数字
 		for(int i=0;i<9;i++){
-			if(cells[row][i]!='0'){
+			if(cells[row][i]<10){
 				sbBuffer.append(cells[row][i]);
 			}
 		}
 		//记录第col列所有数字
 		for(int i=0;i<9;i++){
-			if(cells[i][col]!='0'){
+			if(cells[i][col]<10){
 				sbBuffer.append(cells[i][col]);
 			}
 		}
@@ -157,7 +170,7 @@ public class Sudoku {
 		int boxC=(col / 3)*3;
 		for(int i=0;i<3;i++){
 			for(int j=0;j<3;j++){
-				if(cells[boxR+i][boxC+j]!='0'){
+				if(cells[boxR+i][boxC+j]<10){
 					sbBuffer.append(cells[boxR+i][boxC+j]);
 				}
 			}
@@ -169,17 +182,14 @@ public class Sudoku {
 				hintNumber.append(i);
 			}
 		}
-		String rc=row+","+col;
+//		String rc=row+","+col;
+		fillCell(row, col, Integer.parseInt(hintNumber.toString()));
+//		cells[row][col]=Integer.parseInt(hintNumber.toString());
 		if(hintNumber.length()==1){
-			cells[row][col]=hintNumber.charAt(0);
-			System.out.println("["+rc+"]="+hintNumber.toString());
-			if(hint.containsKey(rc)){
-				hint.remove(rc);
-			}
+//			System.out.println("["+rc+"]="+hintNumber.toString());
 			return true;
-		}else if(hintNumber.length()>1){
-			hint.put(rc, hintNumber.toString());
-			System.out.println("["+rc+"] 候选数有："+hintNumber.toString());
+		}else{
+//			System.out.println("["+rc+"] 候选数有："+hintNumber.toString());
 		}
 		return false;
 	}
@@ -189,7 +199,7 @@ public class Sudoku {
 	 * @create 2018年2月28日 上午9:41:23 ：xieshp@css.com.cn 
 	 * @modify
 	 */
-	private static boolean checkTwoHintNum(){
+	/*private  boolean checkTwoHintNum(){
 		boolean changed=false;
 		//检查每一行
 		for(int r=0;r<9;r++){
@@ -204,7 +214,7 @@ public class Sudoku {
 								String s2=hint.get(pos2);
 								if(s1.equals(s2)){//同一行中的两个单元格中的都是两个候选数，且数字相同
 									for(int i=0;i<9;i++){
-										if(i!=c1 && i!=c2 && cells[r][i]=='0'){
+										if(i!=c1 && i!=c2 && cells[r][i]==0){
 											String p=r+","+i;
 											String s=hint.get(p);
 											StringBuffer sb=new StringBuffer(s);
@@ -215,9 +225,7 @@ public class Sudoku {
 												}
 											}
 											if(sb.length()==1){
-												System.out.println("["+p+"]="+sb.charAt(0));
-												cells[r][i]=sb.charAt(0);
-												hint.remove(p);
+												fillCell(r, i, Integer.valueOf(sb.toString()));
 												return true;
 											}else{
 												hint.put(p, sb.toString());
@@ -244,7 +252,7 @@ public class Sudoku {
 								String s2=hint.get(pos2);
 								if(s1.equals(s2)){//同一行中的两个单元格中的都是两个候选数，且数字相同
 									for(int i=0;i<9;i++){
-										if(i!=r1 && i!=r2 && cells[i][c]=='0'){
+										if(i!=r1 && i!=r2 && cells[i][c]==0){
 											String p=i+","+c;
 											String s=hint.get(p);
 											StringBuffer sb=new StringBuffer(s);
@@ -255,9 +263,7 @@ public class Sudoku {
 												}
 											}
 											if(sb.length()==1){
-												System.out.println("["+p+"]="+sb.charAt(0));
-												cells[i][c]=sb.charAt(0);
-												hint.remove(p);
+												fillCell(i, c, Integer.valueOf(sb.toString()));
 												return true;
 											}else{
 												hint.put(p, sb.toString());
@@ -294,7 +300,7 @@ public class Sudoku {
 											if(s1.equals(s2)){//同一宫中的两个单元格中的都是两个候选数，且数字相同
 												for(int r3=0;r3<3;r3++){
 													for(int c3=0;c3<3;c3++){
-														if(cells[r+r3][c+c3]=='0'){
+														if(cells[r+r3][c+c3]==0){
 															if(r3==r1 && c3==c1 || r3==r2 && c3==c2){
 																continue;
 															}
@@ -308,9 +314,7 @@ public class Sudoku {
 																}
 															}
 															if(sb.length()==1){
-																System.out.println("["+pos3+"]="+sb.charAt(0));
-																cells[r+r3][c+c3]=sb.charAt(0);
-																hint.remove(pos3);
+																fillCell(r+r3, c+c3, Integer.valueOf(sb.toString()));
 																return true;
 															}else{
 																hint.put(pos3, sb.toString());
@@ -332,27 +336,28 @@ public class Sudoku {
 			return checkTwoHintNum();
 		}
 		return false;
-	}
+	}*/
 	
 	/**
 	 * 基础摒除法： 如果某候选数在行/列/宫内的唯一一个单元格中出现，则此单元格中只能是该数
 	 * @create 2018年2月9日 下午5:01:00 ：xieshp@css.com.cn 
 	 * @modify
 	 */
-	private static boolean checkHintInBox(int row,int col){
-		String curPos=row+","+col;
-		String s=hint.get(curPos);
+	private  boolean checkHintInBox(int row,int col){
+		if(cells[row][col]<10){
+			return false;
+		}
+		String s=cells[row][col]+"";
 		for(int i=0;i<s.length();i++){
-			char h=s.charAt(i);
+			int h=(s.charAt(i)-'0');
 			boolean isExists=false;//不存在
+			//本宫起始位置
+			int boxR=(row / 3)*3;
+			int boxC=(col / 3)*3;
 			//检查当前列每一单元格
-			for(int r=0;r<9;r++){
-				if(r==row){
-					continue;
-				}
-				String pos=r+","+col;
-				if(hint.containsKey(pos)){
-					String s1=hint.get(pos);
+			for(int n=0;n<9;n++){
+				if(n!=row && cells[n][col]>10){
+					String s1=cells[n][col]+"";
 					if(s1.contains(h+"")){
 						isExists=true;
 						break;
@@ -361,14 +366,9 @@ public class Sudoku {
 			}
 			if(isExists){
 				isExists=false;
-				//检查当前行每一个单元格
-				for(int c=0;c<9;c++){
-					if(c==col){
-						continue;
-					}
-					String pos=row+","+c;
-					if(hint.containsKey(pos)){
-						String s1=hint.get(pos);
+				for(int n=0;n<9;n++){
+					if(n!=col && cells[row][n]>10){
+						String s1=cells[row][n]+"";
 						if(s1.contains(h+"")){
 							isExists=true;
 							break;
@@ -378,37 +378,104 @@ public class Sudoku {
 			}
 			if(isExists){
 				isExists=false;
-				//检查当前宫每一个单元格
-				//检查本宫所有数字
-				int boxR=(row / 3)*3;
-				int boxC=(col / 3)*3;
-				for(int r=0;r<3;r++){
-					for(int c=0;c<3;c++){
-						if(row==(boxR+r) && col==(boxC+c)){
-							continue;
-						}
-						String pos=(boxR+r)+","+(boxC+c);
-						if(hint.containsKey(pos)){
-							String s1=hint.get(pos);
-							if(s1.contains(h+"")){
-								isExists=true;
-								break;
-							}
+				for(int n=0;n<9;n++){
+					if(!(row==(boxR+n/3) && col==(boxC+n % 3)) && cells[boxR+n/3][boxC+n % 3]>10){
+						String s1=cells[boxR+n/3][boxC+n % 3]+"";
+						if(s1.contains(h+"")){
+							isExists=true;
+							break;
 						}
 					}
 				}
 			}
 			if(!isExists){
 				fillCell(row, col, h);
-				/*System.out.println("["+curPos+"]="+h);
-				cells[row][col]=h;
-				hint.remove(curPos);*/
 				return true;
 			}
 		}
 		return false;
 	}
-	private static void print(){
+	/**
+	 * 暴力破解
+	 * @create 2018年3月1日 上午11:33:47 ：xieshp@css.com.cn 
+	 * @modify
+	 */
+	private  boolean bruteForce(){
+		int r=0;
+		int c=0;
+		int h=0;
+		for(int i=0;i<81;i++){
+			r=i/9;
+			c=i%9;
+			h=cells[r][c];
+			if(h>10 && h<100){
+				break;
+			}
+		}
+		if(h>10){
+//			String s=toStr();
+			int[][] bak=copyArray(cells);
+			fillCell(r, c, h/10);
+			boolean b=bruteForce();
+			if(b){
+				return b;
+			}
+//			initCells(s);
+//			findAllHint();
+			cells=copyArray(bak);
+			fillCell(r, c, h%10);
+			return bruteForce();
+		}
+		return checkResult();
+	}
+	/**
+	 * 检查当前的结果是否正确
+	 * @return
+	 * @create 2018年3月1日 上午11:30:55 ：xieshp@css.com.cn 
+	 * @modify
+	 */
+	private  boolean checkResult(){
+		for(int i=0;i<9;i++){
+			StringBuilder rs=new StringBuilder();
+			StringBuilder rc=new StringBuilder();
+			for(int j=0;j<9;j++){
+				if(cells[i][j]>10 || rs.indexOf(""+cells[i][j])>=0){
+					System.out.println("["+i+","+j+"]="+cells[i][j]);
+					return false;
+				}else{
+					rs.append(cells[i][j]);
+				}
+				if(cells[j][i]>10 || rc.indexOf(""+cells[j][i])>=0){
+					System.out.println("["+j+","+i+"]="+cells[j][i]);
+					return false;
+				}else{
+					rc.append(cells[j][i]);
+				}
+			}
+		}
+		return true;
+	}
+	private  String toStr(){
+		StringBuilder sb=new StringBuilder();
+		for(int i=0;i<9;i++){
+			for(int j=0;j<9;j++){
+				sb.append(cells[i][j]>10?0:cells[i][j]);
+			}
+			sb.append(",");
+		}
+		sb.deleteCharAt(sb.length()-1);
+		return sb.toString();
+	}
+	private int[][] copyArray(int[][] src){
+		int[][] newCells=new int[9][9];
+		for(int i=0;i<9;i++){
+			for(int j=0;j<9;j++){
+				newCells[i][j]=src[i][j];
+			}
+		}
+		return newCells;
+	}
+	private void print(){
 		for(int i=0;i<9;i++){
 			if(i%3==0){
 				System.out.println("-------------------------");
@@ -417,7 +484,7 @@ public class Sudoku {
 				if(j%3==0){
 					System.out.print("| ");
 				}
-				System.out.print(cells[i][j]+" ");
+				System.out.print((cells[i][j]<10?cells[i][j]:0)+" ");
 			}
 			System.out.println("|");
 		}
