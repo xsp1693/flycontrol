@@ -9,35 +9,41 @@
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
+	      <groupId>junit</groupId>
+	      <artifactId>junit</artifactId>
+	      <version>3.8.1</version>
+	      <scope>test</scope>
     </dependency>
     
     <dependency>  
-    <groupId>c3p0</groupId>  
-    <artifactId>c3p0</artifactId>  
-    <version>0.9.1.1</version>  
+	    <groupId>c3p0</groupId>  
+	    <artifactId>c3p0</artifactId>  
+	    <version>0.9.1.1</version>  
 	</dependency> 
 	
 	<dependency>  
-    <groupId>mysql</groupId>  
-    <artifactId>mysql-connector-java</artifactId>  
-    <version>5.1.25</version>  
+	    <groupId>mysql</groupId>  
+	    <artifactId>mysql-connector-java</artifactId>  
+	    <version>5.1.25</version>  
 	</dependency>
 	
 	<dependency>  
-    <groupId>commons-dbutils</groupId>  
-    <artifactId>commons-dbutils</artifactId>  
-    <version>1.6</version>  
+	    <groupId>commons-dbutils</groupId>  
+	    <artifactId>commons-dbutils</artifactId>  
+	    <version>1.6</version>  
 	</dependency>  
 	
 	<dependency>  
-    <groupId>com.alibaba</groupId>  
-    <artifactId>fastjson</artifactId>  
-    <version>1.2.1</version>  
+	    <groupId>com.alibaba</groupId>  
+	    <artifactId>fastjson</artifactId>  
+	    <version>1.2.1</version>  
 	</dependency> 
+	
+	<dependency>
+        <groupId>com.google.zxing</groupId>
+        <artifactId>core</artifactId>
+        <version>3.3.0</version>
+    </dependency>
   </dependencies>
   <build>
     <finalName>test</finalName>

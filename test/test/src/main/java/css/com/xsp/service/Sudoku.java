@@ -22,7 +22,9 @@ public class Sudoku {
 //		String q="050000020,400206007,008030100,010000060,009000500,070000090,005080300,700901004,020000070";//24
 //		String q="500090201,002007008,080000300,014005000,000903000,000800940,003000060,600200100,809060005";//26
 //		String q="000020040,000000900,000300070,003040000,600050093,970080006,010005200,060007050,800600000";//23个数
-		String q="600000400,008070620,350000080,000640800,000000000,004053000,080000096,041020500,002000001";//24
+//		String q="600000400,008070620,350000080,000640800,000000000,004053000,080000096,041020500,002000001";//24
+		String q="005300000,800000020,070010500,400005300,010070006,003200080,060500009,004000030,000009700";
+//		String q="003620000,006903000,000001053,000014279,000000000,450000000,860000000,000002500,000007800";
 		Sudoku t=new Sudoku();
 		long t1=System.currentTimeMillis();
 		t.initCells(q);
@@ -182,14 +184,9 @@ public class Sudoku {
 				hintNumber.append(i);
 			}
 		}
-//		String rc=row+","+col;
 		fillCell(row, col, Integer.parseInt(hintNumber.toString()));
-//		cells[row][col]=Integer.parseInt(hintNumber.toString());
 		if(hintNumber.length()==1){
-//			System.out.println("["+rc+"]="+hintNumber.toString());
 			return true;
-		}else{
-//			System.out.println("["+rc+"] 候选数有："+hintNumber.toString());
 		}
 		return false;
 	}
