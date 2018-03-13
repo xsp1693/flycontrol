@@ -8,6 +8,8 @@
  */
 package css.com.xsp.service;
 
+import net.spy.memcached.MemcachedClient;
+
 /**
  * @createTime 2018年2月9日 上午10:34:41
  * @modifyTime 
@@ -19,21 +21,31 @@ public class Sudoku {
 	private  int[][] cells=new int[9][9];
 	public static void main(String[] args) {
 //		String q="810003290,067000000,900500006,000408000,604000809,000209000,700001008,000000370,053800042";//28
-//		String q="050000020,400206007,008030100,010000060,009000500,070000090,005080300,700901004,020000070";//24
+		String q="050000020,400206007,008030100,010000060,009000500,070000090,005080300,700901004,020000070";//24
 //		String q="500090201,002007008,080000300,014005000,000903000,000800940,003000060,600200100,809060005";//26
 //		String q="000020040,000000900,000300070,003040000,600050093,970080006,010005200,060007050,800600000";//23个数
 //		String q="600000400,008070620,350000080,000640800,000000000,004053000,080000096,041020500,002000001";//24
-		String q="005300000,800000020,070010500,400005300,010070006,003200080,060500009,004000030,000009700";
+//		String q="005300000,800000020,070010500,400005300,010070006,003200080,060500009,004000030,000009700";
 //		String q="003620000,006903000,000001053,000014279,000000000,450000000,860000000,000002500,000007800";
 		Sudoku t=new Sudoku();
-		long t1=System.currentTimeMillis();
-		t.initCells(q);
-		t.print();
-		t.compute();
-		long t2=System.currentTimeMillis();
-		t.print();
-		boolean b=t.checkResult();
-		System.out.println(b?"OK,共耗时"+(t2-t1)+"毫秒。":"有错或未完成");
+		MemcachedClient mcc=MemcachedUtil.getMcc();
+		String resutl=(String)mcc.get(q);
+		if(resutl==null){
+			long t1=System.currentTimeMillis();
+			t.initCells(q);
+			t.print(q);
+			t.compute();
+			long t2=System.currentTimeMillis();
+			boolean b=t.checkResult();
+			if(b){
+				resutl=t.toStr();
+				mcc.add(q, 3600*8, resutl);
+				System.out.println("OK,共耗时"+(t2-t1)+"毫秒。");
+			}else{
+				System.out.println("有错或未完成");
+			}
+		}
+		t.print(resutl);
 	}
 	
 	private void compute(){
@@ -472,7 +484,7 @@ public class Sudoku {
 		}
 		return newCells;
 	}
-	private void print(){
+	private void print(int[][] cells){
 		for(int i=0;i<9;i++){
 			if(i%3==0){
 				System.out.println("-------------------------");
@@ -487,5 +499,20 @@ public class Sudoku {
 		}
 		System.out.println("-------------------------");
 	}
-
+	private void print(String question){
+		String[] arr=question.split(",");
+		for(int i=0;i<9;i++){
+			if(i%3==0){
+				System.out.println("-------------------------");
+			}
+			for(int j=0;j<9;j++){
+				if(j%3==0){
+					System.out.print("| ");
+				}
+				System.out.print(arr[i].charAt(j)+" ");
+			}
+			System.out.println("|");
+		}
+		System.out.println("-------------------------");
+	}
 }
