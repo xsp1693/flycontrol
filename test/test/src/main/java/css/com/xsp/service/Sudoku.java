@@ -21,31 +21,32 @@ public class Sudoku {
 	private  int[][] cells=new int[9][9];
 	public static void main(String[] args) {
 //		String q="810003290,067000000,900500006,000408000,604000809,000209000,700001008,000000370,053800042";//28
-		String q="050000020,400206007,008030100,010000060,009000500,070000090,005080300,700901004,020000070";//24
+//		String q="050000020,400206007,008030100,010000060,009000500,070000090,005080300,700901004,020000070";//24
 //		String q="500090201,002007008,080000300,014005000,000903000,000800940,003000060,600200100,809060005";//26
 //		String q="000020040,000000900,000300070,003040000,600050093,970080006,010005200,060007050,800600000";//23个数
 //		String q="600000400,008070620,350000080,000640800,000000000,004053000,080000096,041020500,002000001";//24
 //		String q="005300000,800000020,070010500,400005300,010070006,003200080,060500009,004000030,000009700";
-//		String q="003620000,006903000,000001053,000014279,000000000,450000000,860000000,000002500,000007800";
+		String q="003620000,006903000,000001053,000014279,000000000,450000000,860000000,000002500,000007800";
 		Sudoku t=new Sudoku();
 		MemcachedClient mcc=MemcachedUtil.getMcc();
+		long t1=System.currentTimeMillis();
 		String resutl=(String)mcc.get(q);
 		if(resutl==null){
-			long t1=System.currentTimeMillis();
 			t.initCells(q);
 			t.print(q);
 			t.compute();
-			long t2=System.currentTimeMillis();
 			boolean b=t.checkResult();
 			if(b){
 				resutl=t.toStr();
 				mcc.add(q, 3600*8, resutl);
-				System.out.println("OK,共耗时"+(t2-t1)+"毫秒。");
 			}else{
 				System.out.println("有错或未完成");
 			}
 		}
+		long t2=System.currentTimeMillis();
+		mcc.shutdown();
 		t.print(resutl);
+		System.out.println("共耗时"+(t2-t1)+"毫秒。");
 	}
 	
 	private void compute(){
