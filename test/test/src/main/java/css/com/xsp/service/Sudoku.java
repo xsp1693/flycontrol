@@ -4,7 +4,7 @@
  * <b>文件名：</b>Sudoku.java<br/>  
  * <b>版本信息：</b>1.0<br/>  
  * <b>日期：</b>2018年2月9日 上午10:34:41<br/>  
- * <b>COPYRIGHT 2010-2016 ALL RIGHTS RESERVED 中国软件与技术服务股份有限公司</b>-版权所有<br/>
+ * <b>COPYRIGHT 2010-2016 ALL RIGHTS RESERVED </b>-版权所有<br/>
  */
 package css.com.xsp.service;
 
@@ -13,7 +13,7 @@ import net.spy.memcached.MemcachedClient;
 /**test
  * @createTime 2018年2月9日 上午10:34:41
  * @modifyTime 
- * @author xieshp@css.com.cn
+ * @author 
  * @version 1.0
  */
 public class Sudoku {
@@ -78,7 +78,7 @@ public class Sudoku {
 
 	/**
 	 * 查找所有的候选数
-	 * @create 2018年3月1日 下午12:38:12 ：xieshp@css.com.cn 
+	 * @create 2018年3月1日 下午12:38:12 ： 
 	 * @modify
 	 */
 	private  void findAllHint() {
@@ -111,7 +111,7 @@ public class Sudoku {
 	 * @param col
 	 * @param num
 	 * @throws Exception 
-	 * @create 2018年2月28日 下午4:52:21 ：xieshp@css.com.cn 
+	 * @create 2018年2月28日 下午4:52:21 ： 
 	 * @modify
 	 */
 	private  void fillCell(int row,int col,int num){
@@ -144,7 +144,7 @@ public class Sudoku {
 	 * @param row
 	 * @param col
 	 * @param num
-	 * @create 2018年2月28日 下午4:49:34 ：xieshp@css.com.cn 
+	 * @create 2018年2月28日 下午4:49:34 ： 
 	 * @modify
 	 */
 	private  void removeHintChar(int row,int col,int num){
@@ -163,7 +163,7 @@ public class Sudoku {
 	 * @param row 空单元格所在行
 	 * @param col 空单元格所在列
 	 * @return
-	 * @create 2018年2月9日 下午3:40:34 ：xieshp@css.com.cn 
+	 * @create 2018年2月9日 下午3:40:34 ： 
 	 * @modify
 	 */
 	private  boolean checkEmptyCell(int row,int col){
@@ -206,7 +206,7 @@ public class Sudoku {
 	/**
 	 * 如果同一行/列/宫有两个单元格中存在相同的两个候选数，且无其它候选数时，则本行/列/宫中其它单元格中不能再有这两个候选数
 	 * @return
-	 * @create 2018年2月28日 上午9:41:23 ：xieshp@css.com.cn 
+	 * @create 2018年2月28日 上午9:41:23 ： 
 	 * @modify
 	 */
 	/*private  boolean checkTwoHintNum(){
@@ -350,7 +350,7 @@ public class Sudoku {
 	
 	/**
 	 * 基础摒除法： 如果某候选数在行/列/宫内的唯一一个单元格中出现，则此单元格中只能是该数
-	 * @create 2018年2月9日 下午5:01:00 ：xieshp@css.com.cn 
+	 * @create 2018年2月9日 下午5:01:00 ： 
 	 * @modify
 	 */
 	private  boolean checkHintInBox(int row,int col){
@@ -407,7 +407,7 @@ public class Sudoku {
 	}
 	/**
 	 * 暴力破解
-	 * @create 2018年3月1日 上午11:33:47 ：xieshp@css.com.cn 
+	 * @create 2018年3月1日 上午11:33:47 ： 
 	 * @modify
 	 */
 	private  boolean bruteForce(){
@@ -441,7 +441,7 @@ public class Sudoku {
 	/**
 	 * 检查当前的结果是否正确
 	 * @return
-	 * @create 2018年3月1日 上午11:30:55 ：xieshp@css.com.cn 
+	 * @create 2018年3月1日 上午11:30:55 ： 
 	 * @modify
 	 */
 	private  boolean checkResult(){

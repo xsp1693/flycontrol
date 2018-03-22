@@ -4,7 +4,7 @@
  * <b>文件名：</b>Sudoku2.java<br/>  
  * <b>版本信息：</b>1.0<br/>  
  * <b>日期：</b>2018年3月2日 上午11:23:24<br/>  
- * <b>COPYRIGHT 2010-2016 ALL RIGHTS RESERVED 中国软件与技术服务股份有限公司</b>-版权所有<br/>
+ * <b>COPYRIGHT 2010-2016 ALL RIGHTS RESERVED </b>-版权所有<br/>
  */
 package css.com.xsp.service;
 

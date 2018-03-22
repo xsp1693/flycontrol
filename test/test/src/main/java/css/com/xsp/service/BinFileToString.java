@@ -4,7 +4,7 @@
  * <b>文件名：</b>BinFileToString.java<br/>  
  * <b>版本信息：</b>1.0<br/>  
  * <b>日期：</b>2018年1月16日 下午2:53:52<br/>  
- * <b>COPYRIGHT 2010-2016 ALL RIGHTS RESERVED 中国软件与技术服务股份有限公司</b>-版权所有<br/>
+ * <b>COPYRIGHT 2010-2016 ALL RIGHTS RESERVED </b>-版权所有<br/>
  */
 package css.com.xsp.service;
 
@@ -19,7 +19,7 @@ import java.util.Arrays;
 /**
  * @createTime 2018年1月16日 下午2:53:52
  * @modifyTime 
- * @author xieshp@css.com.cn
+ * @author 
  * @version 1.0
  */
 public class BinFileToString {

@@ -4,7 +4,7 @@
  * <b>文件名：</b>BufferedImageLuminanceSource.java<br/>  
  * <b>版本信息：</b>1.0<br/>  
  * <b>日期：</b>2018年3月12日 下午5:40:22<br/>  
- * <b>COPYRIGHT 2010-2016 ALL RIGHTS RESERVED 中国软件与技术服务股份有限公司</b>-版权所有<br/>
+ * <b>COPYRIGHT 2010-2016 ALL RIGHTS RESERVED </b>-版权所有<br/>
  */
 package css.com.xsp.service;
 import com.google.zxing.LuminanceSource;
